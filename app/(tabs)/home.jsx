@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, FlatList, Image, RefreshControl, Alert } from "react-native";
+import { View, Text, SafeAreaView, FlatList, Image, RefreshControl } from "react-native";
 import React, { useState } from "react";
 
 import { images } from "../../constants";

@@ -3,9 +3,13 @@ import React, { useState } from "react";
 import { ResizeMode, Video } from "expo-av";
 
 import { icons } from "../constants";
+import { useGlobalContext } from "../context/GlobalProvider";
+import { savePost, unsavePost } from "../lib/appwrite";
 
-const VideoCard = ({ video: { title, thumbnail, video, creator } }) => {
+const VideoCard = ({ video: { $id, title, thumbnail, video, creator, liked } }) => {
+    const { user } = useGlobalContext();
     const [play, setPlay] = useState(false);
+    const [isLiked, setIsLiked] = useState(liked.some((item) => item?.$id === user?.$id));
 
     return (
         <View className=" items-center px-4 mb-14">
@@ -27,9 +31,20 @@ const VideoCard = ({ video: { title, thumbnail, video, creator } }) => {
                         </Text>
                     </View>
                 </View>
-                <View className="pt-2">
-                    <Image source={icons.menu} className="w-5 h-5" resizeMode="contain" />
-                </View>
+                <TouchableOpacity
+                    className="pt-2"
+                    onPress={() => {
+                        isLiked ? unsavePost(user?.$id, $id, liked) : savePost(user?.$id, $id, liked);
+                        setIsLiked(!isLiked);
+                    }}
+                >
+                    <Image
+                        source={icons.bookmark}
+                        className="w-5 h-5"
+                        tintColor={isLiked && "#FFA001"}
+                        resizeMode="contain"
+                    />
+                </TouchableOpacity>
             </View>
 
             {play ? (
